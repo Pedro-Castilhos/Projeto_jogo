@@ -1,2 +1,2 @@
 # Projeto_jogo
- Projeto de Jogos - IFgoiano
+ Projeto de Jogos_IF-Goiano
