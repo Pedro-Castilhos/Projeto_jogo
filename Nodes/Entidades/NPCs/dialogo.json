@@ -1,0 +1,6 @@
+[
+    {"nome": "NPC", "texto": "Olá! Eu sou um NPC!"},
+    {"nome": "NPC", "texto": "Isso aqui é um teste de diálogo simples"},
+    {"nome": "NPC", "texto": "..."},
+    {"nome": "Você", "texto": "Então tá bom!"}
+]

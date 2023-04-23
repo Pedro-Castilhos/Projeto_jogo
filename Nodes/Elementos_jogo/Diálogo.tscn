@@ -1,0 +1,105 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Imagens/Elementos_jogo/Caixa de Diálogo.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends CanvasLayer
+
+export(String, FILE, \"*.json\") var arquivo_dialogo
+
+var dialogo = []
+var id_dialogo_atual = 0
+export var dialogo_ativo = false
+var digitando = false
+
+func _ready():
+	$NinePatchRect.visible = false
+	$NinePatchRect/Texto.visible_characters = 0
+
+func comecar():
+	if dialogo_ativo:
+		return
+	dialogo_ativo = true
+	$NinePatchRect.visible = true
+	dialogo = carregar_dialogo()
+	id_dialogo_atual = -1
+	proxima_fala()
+	
+func carregar_dialogo():
+	var file = File.new()
+	if file.file_exists(arquivo_dialogo):
+		file.open(arquivo_dialogo, File.READ)
+		return parse_json(file.get_as_text())
+		
+func _input(event):
+	if !dialogo_ativo:
+		return
+	if event.is_action_pressed(\"Interação\"):
+		if digitando:
+			$NinePatchRect/Texto.visible_characters = len(dialogo[id_dialogo_atual][\"texto\"])
+			return
+		proxima_fala()
+
+func proxima_fala():
+	$NinePatchRect/Texto.visible_characters = 0
+	id_dialogo_atual += 1
+	
+	if id_dialogo_atual >= len(dialogo):
+		$Timer.start()
+		id_dialogo_atual = 0
+		$NinePatchRect.visible = false
+		return
+	
+	$NinePatchRect/Nome.text = dialogo[id_dialogo_atual][\"nome\"]
+	$NinePatchRect/Texto.text = dialogo[id_dialogo_atual][\"texto\"]
+	
+func _physics_process(_delta):
+	if dialogo_ativo:
+		if $NinePatchRect/Texto.visible_characters < len(dialogo[id_dialogo_atual][\"texto\"]):
+			$NinePatchRect/Texto.visible_characters +=  1
+			digitando = true
+		if $NinePatchRect/Texto.visible_characters >= len(dialogo[id_dialogo_atual][\"texto\"]):
+			digitando = false
+
+
+func _on_Timer_timeout():
+	dialogo_ativo = false
+"
+
+[node name="Diálogo" type="CanvasLayer"]
+script = SubResource( 1 )
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 60.0
+margin_top = -131.0
+margin_right = -68.0
+margin_bottom = -21.0
+texture = ExtResource( 1 )
+region_rect = Rect2( 0, 0, 32, 32 )
+patch_margin_left = 7
+patch_margin_top = 8
+patch_margin_right = 6
+patch_margin_bottom = 7
+
+[node name="Nome" type="RichTextLabel" parent="NinePatchRect"]
+margin_left = 27.0
+margin_top = 17.0
+margin_right = 286.0
+margin_bottom = 56.0
+text = "*Nome"
+
+[node name="Texto" type="RichTextLabel" parent="NinePatchRect"]
+margin_left = 49.0
+margin_top = 45.0
+margin_right = 409.0
+margin_bottom = 85.0
+text = "Estou conversando...."
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.4
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

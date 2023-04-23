@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="StreamTexture" id=2]
+flags = 4
+load_path = "res://.import/Sprites_game-sem fundo.png-b9e009f12c329ae3c149ced28c63ca0f.stex"
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 42.9999
+height = 90.0003
+
+[node name="Rotatória" type="StaticBody2D"]
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 9.53674e-07, 23 )
+scale = Vector2( 1.18868, 1.18868 )
+texture = SubResource( 2 )
+region_enabled = true
+region_rect = Rect2( 13, 164, 149, 106 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -1, 40 )
+rotation = 1.5708
+shape = SubResource( 1 )

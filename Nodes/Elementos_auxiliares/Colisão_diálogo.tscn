@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 30.5, 31.5 )
+
+[node name="Colisão_diálogo" type="Area2D"]
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0.5, -11.5 )
+shape = SubResource( 1 )
+
+[connection signal="area_entered" from="." to="." method="_on_Coliso_dilogo_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_Coliso_dilogo_area_exited"]
